@@ -3,7 +3,7 @@ package JWutil;
 public class App {
 
     public static String getVersion() {
-        return "v0.1.0";
+        return "v1.0.0";
     }
 
     public static void sleep(int delay) {
