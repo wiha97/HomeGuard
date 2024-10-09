@@ -6,28 +6,40 @@ import Models.EntryPoint;
 
 public class EntryDetector extends Detector implements Alarm {
     protected EntryPoint entryPoint;
+    private boolean softTrigger;
 
     public EntryDetector(EntryPoint entryPoint){
         this.entryPoint = entryPoint;
     }
 
+    public void softTrigger(){
+        softTrigger = true;
+        CentralUnit.setNotification(entryPoint + " was opened");
+    }
+
     @Override
     public void trigger() {
         isTriggered = true;
-        CentralUnit.setNotification(entryPoint.toString() + " opened");
+        CentralUnit.setNotification(entryPoint + " was broken");
     }
 
     @Override
     public void detect() {
-        if(entryPoint.isOpen() && !isTriggered)
+        if(entryPoint.isBroken() && !isTriggered)
             trigger();
-        else if(isTriggered && !entryPoint.isOpen())
+        else if(entryPoint.isOpen() && !isTriggered)
+            softTrigger();
+        else if(isTriggered && !entryPoint.isOpen() && !entryPoint.isBroken())
             reset();
     }
 
     @Override
     public void reset() {
-        entryPoint.close();
+        softTrigger = false;
         isTriggered = false;
+    }
+
+    public boolean isSoftTrigger(){
+        return softTrigger;
     }
 }

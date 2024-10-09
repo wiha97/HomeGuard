@@ -9,7 +9,7 @@ public class StrongDoor extends Door {
 
     public StrongDoor(Room room){
         super(room);
-        name = room.getName() + " strong door";
+        name = "secure door";
         pinPad = new PinPad(this);
     }
 

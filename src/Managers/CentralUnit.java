@@ -157,6 +157,7 @@ public class CentralUnit {
     private static void runSimulation(int passes) {
         for (int i = 0; i < passes; i++) {
             for (Room room : house.getRooms()) {
+                EntryPoint ep = room.getEntryPoints()[new Random().nextInt(room.getEntryPoints().length)];
                 try {
                     switch (new Random().nextInt(10)) {
                         case 1:
@@ -167,10 +168,7 @@ public class CentralUnit {
                             break;
                         case 3:
                             if (room.getEntryPoints().length > 0) {
-                                EntryPoint ep = room.getEntryPoints()[new Random().nextInt(room.getEntryPoints().length)];
-                                if(ep.isOpen())
-                                    ep.close();
-                                else ep.open();
+                                ep.open();
                             }
                         default:
                             break;

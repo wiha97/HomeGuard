@@ -8,7 +8,7 @@ public class WindowDetector extends EntryDetector implements Alarm {
 
     public WindowDetector(Window window) {
         super(window);
-        name = window.getRoom().getName() + " window detector";
+        name = "window detector";
         CentralUnit.getDetectors().add(this);
     }
 

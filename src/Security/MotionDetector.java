@@ -8,7 +8,7 @@ public class MotionDetector extends AreaDetector implements Alarm {
     public MotionDetector(Room room){
         super(room);
         CentralUnit.getDetectors().add(this);
-        name = room.getName() + " motion detector";
+        name = "motion detector";
     }
 
     public void trigger() {

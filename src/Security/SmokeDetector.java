@@ -11,7 +11,7 @@ public class SmokeDetector extends AreaDetector implements Alarm {
     public SmokeDetector(Room room){
         super(room);
         isActive = true;
-        name = room.getName() + " smoke detector";
+        name = "smoke detector";
         sprinkler = new Sprinkler(room);
         CentralUnit.getDetectors().add(this);
     }

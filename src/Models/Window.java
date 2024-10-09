@@ -7,7 +7,7 @@ public class Window extends EntryPoint {
 
     public Window(Room room) {
         super(room);
-        name = room.getName() + " window";
+        name = "window";
         detector = new WindowDetector(this);
     }
 
