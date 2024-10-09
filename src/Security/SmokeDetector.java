@@ -17,8 +17,9 @@ public class SmokeDetector extends AreaDetector implements Alarm {
     }
 
     public void trigger() {
-        room.setStatus(3);
-        CentralUnit.sirens("Smoke detected in " + room.toString());
+        isTriggered = true;
+        room.setOnFire();
+        CentralUnit.setNotification("Smoke detected in " + room.toString());
         sprinkler.activate();
     }
 
@@ -31,6 +32,6 @@ public class SmokeDetector extends AreaDetector implements Alarm {
     }
 
     public void reset() {
-        room.setStatus(0);
+        isTriggered = false;
     }
 }

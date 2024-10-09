@@ -1,6 +1,7 @@
 package Models;
 
 import JWutil.Print;
+import Managers.CentralUnit;
 import Security.Detector;
 import Security.MotionDetector;
 import Security.SmokeDetector;
@@ -23,7 +24,6 @@ public class House {
             for (Area room : areas) {
                 String[] rows = room.getBluePrint().split("\n");
                 if (rows.length > i) {
-//                    Print.same(rows[i]);
                     switch (room.getStatus()) {
                         case 1:
                             Print.same(Print.good(rows[i]));

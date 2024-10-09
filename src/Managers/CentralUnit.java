@@ -4,19 +4,23 @@ import Interfaces.Alarm;
 import JWutil.App;
 import JWutil.Print;
 import JWutil.Validate;
+import Models.EntryPoint;
 import Models.House;
 import Models.Room;
 import Security.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class CentralUnit {
+    private static PinPad pinPad = new PinPad("Central Unit");
     private static final List<Alarm> DETECTORS = new ArrayList<>();
     private static List<Alarm> toggleAbleAlarms;
     private static boolean runLoop;
     private static boolean isEnabled;
     private static House house;
+    private static String notification = "";
 
     public static void start() {
         house = new House();
@@ -28,6 +32,7 @@ public class CentralUnit {
     public static void menu() {
         boolean loop = true;
         while (loop) {
+            Print.clear();
             Print.line(String.format("""
                             %s
                                 %s
@@ -36,51 +41,43 @@ public class CentralUnit {
                                 [3] [T]oggle system (%s)
                                 [4] [R]eset system
                                 [5] [S]imulate""",
-                    Print.title("HomeGuard " + App.getVersion()), Print.back(), DETECTORS.stream().filter(Alarm::isActive).toList().size(), isEnabled ? Print.good("Enabled") : Print.warning("Disabled")));
+                    Print.title("HomeGuard " + App.getVersion(), notification), Print.back(), DETECTORS.stream().filter(Alarm::isActive).toList().size(), isEnabled ? Print.good("Enabled") : Print.warning("Disabled")));
             String option = Validate.option("1o2l3t4r5s");
             switch (option) {
                 case "1":
-                    Print.clear();
                     overview();
                     break;
                 case "o":
-                    Print.clear();
                     overview();
                     break;
                 case "2":
-                    Print.clear();
                     listDetectors();
                     break;
                 case "l":
-                    Print.clear();
                     listDetectors();
                     break;
                 case "3":
-                    Print.clear();
                     toggleAlarm();
                     break;
                 case "t":
-                    Print.clear();
                     toggleAlarm();
                     break;
                 case "4":
-                    Print.clear();
                     reset();
                     break;
                 case "r":
-                    Print.clear();
                     reset();
                     break;
                 case "5":
-                    Print.clear();
+
                     simulate();
                     break;
                 case "s":
-                    Print.clear();
+
                     simulate();
                     break;
                 case "q":
-                    Print.clear();
+
                     loop = false;
                     runLoop = false;
                     break;
@@ -91,20 +88,22 @@ public class CentralUnit {
     private static void overview() {
         boolean loop = true;
         while (loop) {
-            Print.line(Print.title("Overview"));
+            Print.clear();
+            Print.line(Print.title("Overview", notification));
             house.printHouse();
 
-            int size = house.getRooms().size() + 1;
+            int size = house.getRooms().size() + 2;
             String[] options = new String[size];
             int idx = 0;
             for (Room room : house.getRooms()) {
                 options[idx++] = room.getName();
             }
-            options[idx] = "exit";
+            options[idx++] = "exit";
+            options[idx] = "quit";
 
             String option = Validate.optString(options);
-            Print.clear();
-            if (option.equals("exit"))
+
+            if (option.equals("exit") || option.equals("quit"))
                 break;
             house.getRoomByName(option).menu();
         }
@@ -114,42 +113,109 @@ public class CentralUnit {
         Thread thread = new Thread(() -> {
             runLoop = true;
             while (runLoop) {
-                App.sleep(100);
+                App.sleep(10);
                 for (Alarm alarm : DETECTORS.stream().filter(Alarm::isActive).toList()) {
                     alarm.detect();
                 }
             }
-            Print.clear();
+
         });
         thread.start();
     }
 
     private static void simulate() {
         //TODO
+        int passes = 10;
+        boolean loop = true;
+        while (loop) {
+            Print.clear();
+            Print.line(String.format("""
+                    %s
+                        %s
+                        [1] [P]asses (%s)
+                        [2] [R]un""", Print.title("Simulation", notification), Print.back(), passes));
+            String option = Validate.option("1p2r");
+            switch (option) {
+                case "1":
+                    passes = Validate.number(0);
+                    break;
+                case "p":
+                    passes = Validate.number(0);
+                    break;
+                case "2":
+                    runSimulation(passes);
+                    break;
+                case "r":
+                    runSimulation(passes);
+                    break;
+                case "q":
+                    return;
+            }
+        }
+    }
+
+    private static void runSimulation(int passes) {
+        for (int i = 0; i < passes; i++) {
+            for (Room room : house.getRooms()) {
+                try {
+                    switch (new Random().nextInt(10)) {
+                        case 1:
+                            room.setOnFire();
+                            break;
+                        case 2:
+                            room.setHasMovement(!room.isHasMovement());
+                            break;
+                        case 3:
+                            if (room.getEntryPoints().length > 0) {
+                                EntryPoint ep = room.getEntryPoints()[new Random().nextInt(room.getEntryPoints().length)];
+                                if(ep.isOpen())
+                                    ep.close();
+                                else ep.open();
+                            }
+                        default:
+                            break;
+                    }
+                    Print.clear();
+                    Print.line(Print.title("Simulation", notification));
+                    house.printHouse();
+                    App.sleep(100);
+
+                } catch (Exception e) {
+                    notification = room.getName() + " " + e.getMessage();
+                    break;
+                }
+            }
+        }
+        notification = "Simulation complete";
     }
 
     private static void listDetectors() {
         Print.clear();
+        notification = "";
         for (Alarm alarm : toggleAbleAlarms) {
-            Print.line(alarm);
+            notification += "\n" + alarm;
         }
     }
 
     private static void toggleAlarm() {
-        if (new PinPad().enterPin()) {
+        Print.clear();
+        if (pinPad.enterPin()) {
             isEnabled = !isEnabled;
             for (Alarm alarm : toggleAbleAlarms) {
                 ((Detector) alarm).setActive(isEnabled);
             }
         }
+        notification = Print.GRAY + "toggled alarms" + Print.RESET;
     }
 
     private static void reset() {
-        if (new PinPad().enterPin()) {
+        Print.clear();
+        if (pinPad.enterPin()) {
             for (Alarm alarm : DETECTORS) {
                 alarm.reset();
             }
         }
+        notification = "Reset alarm system";
     }
 
     public static void sirens(String message) {
@@ -161,7 +227,15 @@ public class CentralUnit {
         return DETECTORS;
     }
 
+    public static String getNotification() {
+        return notification;
+    }
+
     public static void setRunLoop(boolean run) {
         runLoop = run;
+    }
+
+    public static void setNotification(String notification) {
+        CentralUnit.notification = notification;
     }
 }

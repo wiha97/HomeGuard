@@ -1,6 +1,8 @@
 package Security;
 
+import JWutil.App;
 import JWutil.Print;
+import Managers.CentralUnit;
 import Models.Room;
 
 public class Sprinkler {
@@ -9,7 +11,10 @@ public class Sprinkler {
         this.room = room;
     }
     public void activate(){
-        Print.line(room.getName() + " sprinkler: " + Print.NAVY + "FSSSSSSSSSSSSHHHHHHH" + Print.RESET);
-        room.setOnFire(false);
+        App.sleep(500);
+        CentralUnit.setNotification(room.getName() + " sprinkler: " + Print.NAVY + "FSSSSSSSSSSSSHHHHHHH" + Print.RESET);
+        App.sleep(500);
+        room.extinguishFire();
+        CentralUnit.setNotification(Print.good(room.getName() + " fire extinguished!"));
     }
 }

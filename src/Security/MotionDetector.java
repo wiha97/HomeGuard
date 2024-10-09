@@ -12,24 +12,23 @@ public class MotionDetector extends AreaDetector implements Alarm {
     }
 
     public void trigger() {
-        room.setStatus(2);
         isTriggered = true;
-        CentralUnit.sirens("Motion detected in " + room.getName());
+//        CentralUnit.sirens("Motion detected in " + room.getName());
+        CentralUnit.setNotification("Motion detected in " + room.getName());
     }
 
     @Override
     public void detect() {
-        if(room.isHasMovement()) {
+        if(room.isHasMovement() && !isTriggered) {
             trigger();
         }
-        else if(isTriggered)
+        else if(isTriggered && !room.isHasMovement())
             reset();
-
     }
 
     @Override
     public void reset() {
+        room.setHasMovement(false);
         isTriggered = false;
-        room.setStatus(1);
     }
 }

@@ -1,5 +1,7 @@
 package Models;
 
+import Security.DoorDetector;
+import Security.EntryDetector;
 import Security.PinPad;
 
 public class StrongDoor extends Door {
@@ -8,13 +10,17 @@ public class StrongDoor extends Door {
     public StrongDoor(Room room){
         super(room);
         name = room.getName() + " strong door";
-        pinPad = new PinPad();
+        pinPad = new PinPad(this);
     }
 
     @Override
     public void open() {
-        if(!pinPad.enterPin()) {
-            room.setStatus(3);
+        if(detector.isActive()) {
+            if (!pinPad.enterPin()) {
+                isOpen = true;
+            }
+            else
+                isOpen = false;
         }
     }
 }

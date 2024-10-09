@@ -1,5 +1,7 @@
 package JWutil;
 
+import Managers.CentralUnit;
+
 import java.util.Scanner;
 
 public class Print {
@@ -8,7 +10,7 @@ public class Print {
     public static final String AMBER = "\u001B[33m";
     public static final String NAVY = "\033[94m";
     public static final String GREEN = "\u001B[32m";
-    public static final String GRAY = "\u001B[90m";
+    public static final String GRAY = "\u001B[1m";
 
     public static void line(String text) {
         System.out.println(text);
@@ -56,6 +58,14 @@ public class Print {
                 ============%s============
                             %s
                 ============%s============""", filler(length, "="), title, filler(length, "="));
+    }
+    public static String title(String title, String note) {
+        int length = title.length();
+        return String.format("""
+                ============%s============
+                            %s
+                            %s
+                ============%s============""", filler(length, "="), title, note, filler(length, "="));
     }
 
     private static String filler(int length) {

@@ -5,13 +5,16 @@ import JWutil.*;
 import java.util.concurrent.atomic.*;
 
 public class PinPad {
+    private String name;
     private final String CODE = "0451";
 
-    public PinPad() {
+    public PinPad(Object obj) {
+        this.name = obj.toString();
     }
 
     public boolean enterPin() {
-        Print.line(Print.title("PinPad"));
+        Print.clear();
+        Print.line(Print.title(" 0451 "));
         Print.line("""
                 ||        |        |        ||
                 ||    1   |    2   |    3   ||
@@ -25,8 +28,8 @@ public class PinPad {
                 ||        |        |        ||
                 ||    *   |    0   |    #   ||
                 ||________|________|________||
-                \\|==========================|/
-                """);
+                \\|==========================|/""");
+        Print.line(name);
         final AtomicBoolean loop = new AtomicBoolean(true);
         final AtomicReference<String> pass = new AtomicReference<>("");
         Thread t1 = new Thread(() -> {

@@ -12,22 +12,22 @@ public class WindowDetector extends EntryDetector implements Alarm {
         CentralUnit.getDetectors().add(this);
     }
 
-    @Override
-    public void trigger() {
-        isTriggered = true;
-    }
-
-    @Override
-    public void detect() {
-        if (((Window)entryPoint).isShattered())
-            trigger();
-        else if (isTriggered)
-            reset();
-    }
-
-    @Override
-    public void reset() {
-        isTriggered = false;
-        entryPoint.getRoom().setStatus(1);
-    }
+//    @Override
+//    public void trigger() {
+//        isTriggered = true;
+//    }
+//
+//    @Override
+//    public void detect() {
+//        if (((Window)entryPoint).isShattered())
+//            trigger();
+//        else if (isTriggered)
+//            reset();
+//    }
+//
+//    @Override
+//    public void reset() {
+//        isTriggered = false;
+//        entryPoint.getRoom().setStatus(1);
+//    }
 }

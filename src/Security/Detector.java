@@ -22,4 +22,8 @@ public abstract class Detector {
             return Print.good(name);
         return Print.warning(name);
     }
+
+    public boolean isTriggered() {
+        return isTriggered;
+    }
 }

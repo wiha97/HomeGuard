@@ -22,7 +22,7 @@ public class Area {
     }
 
     protected String statColor(String txt){
-        return switch (status) {
+        return switch (getStatus()) {
             case 1 -> Print.good(txt);
             case 2 -> Print.warning(txt);
             case 3 -> Print.alert(txt);

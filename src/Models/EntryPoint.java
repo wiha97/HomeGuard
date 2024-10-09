@@ -1,5 +1,6 @@
 package Models;
 
+import Managers.CentralUnit;
 import Security.EntryDetector;
 
 public class EntryPoint {
@@ -7,6 +8,7 @@ public class EntryPoint {
     protected Room room;
     protected EntryDetector detector;
     protected boolean isOpen;
+    protected boolean isBroken;
 
     public EntryPoint(Room room){
         this.room = room;
@@ -17,6 +19,7 @@ public class EntryPoint {
     }
 
     public void close(){
+        CentralUnit.setNotification(room.getName() + " closed");
         isOpen = false;
     }
 
@@ -26,6 +29,9 @@ public class EntryPoint {
 
     public boolean isOpen(){
         return isOpen;
+    }
+    public boolean isBroken(){
+        return isBroken;
     }
 
     @Override
