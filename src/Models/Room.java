@@ -33,13 +33,14 @@ public class Room extends Area {
             String opts = "sf";
             String str = "";
             for(int i = 0; i < detectors.length; i++){
-                str += String.format("        %s (%s)", detectors[i], detectors[i].isActive() ? Print.good("enabled"):Print.warning("disabled"));
+                str += String.format("        %s (%s) %s", detectors[i], detectors[i].isActive() ? Print.good("enabled"):Print.warning("disabled"), detectors[i].isTriggered() ? Print.warning("ALERT"):"");
                 str += "\n";
             }
             for (int i = 1; i <= entryPoints.length; i++) {
                 opts += i;
                 int idx = i-1;
-                str += String.format("    [%s] %s (%s) %s", i, entryPoints[idx].getName(), entryPoints[idx].isOpen() ? Print.warning("open") : Print.good("closed"),
+                str += String.format("    [%s] %s (%s) %s %s", i, entryPoints[idx].getName(),
+                        entryPoints[idx].isOpen() ? Print.warning("open") : Print.good("closed"), entryPoints[idx].detector.isTriggered() ? "("+Print.alert("broken")+")":"",
                         (entryPoints[idx] instanceof StrongDoor) ? String.format("(%s)", (entryPoints[idx]).detector.isActive() ? Print.good("enabled"):Print.warning("disabled")):"");
                 if (i != entryPoints.length)
                     str += "\n";

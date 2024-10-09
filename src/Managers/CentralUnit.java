@@ -157,8 +157,8 @@ public class CentralUnit {
     private static void runSimulation(int passes) {
         for (int i = 0; i < passes; i++) {
             for (Room room : house.getRooms()) {
-                EntryPoint ep = room.getEntryPoints()[new Random().nextInt(room.getEntryPoints().length)];
                 try {
+
                     switch (new Random().nextInt(10)) {
                         case 1:
                             room.setOnFire();
@@ -168,8 +168,16 @@ public class CentralUnit {
                             break;
                         case 3:
                             if (room.getEntryPoints().length > 0) {
+                                EntryPoint ep = room.getEntryPoints()[new Random().nextInt(room.getEntryPoints().length)];
                                 ep.open();
                             }
+                            break;
+                        case 4:
+                            if (room.getEntryPoints().length > 0) {
+                                EntryPoint ep = room.getEntryPoints()[new Random().nextInt(room.getEntryPoints().length)];
+                                ep.breach();
+                            }
+                            break;
                         default:
                             break;
                     }
@@ -184,7 +192,7 @@ public class CentralUnit {
                 }
             }
         }
-        notification = "Simulation complete";
+//        notification = "Simulation complete";
     }
 
     private static void listDetectors() {
