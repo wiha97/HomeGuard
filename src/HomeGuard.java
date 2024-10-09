@@ -13,11 +13,8 @@ public class HomeGuard {
     }
 
     static void splash(){
-        for(int i = 0; i < 32; i++){
-            Print.clear();
-            String load = loading(i);
-            Print.line(load);
-            Print.line("""
+        String logo =String.format("""
+                    %s
                     |    ___      ___                |
                     |   |   |    |   |    HOME       |
                     |   |   |    |   | _______       |
@@ -30,18 +27,46 @@ public class HomeGuard {
                     |               \\     \\____| |   |
                     |        GUARD   \\           |   |
                     |                 \\_________/    |
-                    |                                |""");
-            Print.line(load);
-            Print.line("Loading...");
-            App.sleep(33);
+                    |                                |""", line("", false));
+        String[] rows = logo.split("\n");
+        for(String row : rows){
+            App.sleep(50);
+            Print.line(row);
         }
+        line(logo, true);
     }
 
-    private static String loading(int idx){
-        int spaces = 32 - idx;
-        String bar = fillSpace(spaces/2 , ' ');
-        bar += fillSpace(idx, '=');
-        bar+= fillSpace(spaces/2, ' ');
+    static String line(String ln, boolean rev){
+        String bar = "";
+        if(!rev) {
+            for (int i = 0; i < 32; i++) {
+                Print.clear();
+                bar = loading(i, 32, '=', ' ');
+                Print.line(bar);
+                App.sleep(10);
+            }
+        }
+        else {
+            for (int i = 30; i > 0; i--) {
+                Print.clear();
+                bar = loading(i, 30, ' ', '=');
+                Print.line(ln);
+                Print.line(" "+bar+" ");
+                App.sleep(33);
+            }
+        }
+        ln += bar;
+        Print.clear();
+        return ln;
+    }
+
+    private static String loading(int idx, int width, char cb, char fill){
+        int spaces = width - idx;
+        if(spaces % 2 == 0)
+            idx--;
+        String bar = fillSpace(spaces/2 , fill);
+        bar += fillSpace(idx, cb);
+        bar+= fillSpace(spaces/2, fill);
         return bar;
     }
 
