@@ -25,11 +25,13 @@ public class EntryDetector extends Detector implements Alarm {
 
     @Override
     public void detect() {
-        if((isTriggered || softTrigger) && !entryPoint.isOpen() && !entryPoint.isBroken())
+        if(isTriggered && !entryPoint.isBroken())
             reset();
-        if(entryPoint.isBroken() && !isTriggered)
+        else if(entryPoint.isBroken() && !isTriggered)
             trigger();
-        else if(entryPoint.isOpen() && !isTriggered)
+        else if(softTrigger && !entryPoint.isOpen())
+            reset();
+        else if(entryPoint.isOpen() && !softTrigger)
             softTrigger();
     }
 

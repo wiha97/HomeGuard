@@ -41,7 +41,9 @@ public class CentralUnit {
                                 [3] [T]oggle system (%s)
                                 [4] [R]eset system
                                 [5] [S]imulate""",
-                    Print.title("HomeGuard " + App.getVersion(), notification), Print.back(), DETECTORS.stream().filter(Alarm::isActive).toList().size(), isEnabled ? Print.good("Enabled") : Print.warning("Disabled")));
+                    Print.title("HomeGuard " + App.getVersion(), notification), Print.back(), 
+                    DETECTORS.stream().filter(Alarm::isActive).toList().size(), 
+                    isEnabled ? Print.good("Enabled") : Print.warning("Disabled")));
             String option = Validate.option("1o2l3t4r5s");
             switch (option) {
                 case "1":
@@ -141,7 +143,6 @@ public class CentralUnit {
     }
 
     private static void simulate() {
-        //TODO
         int passes = 10;
         int chance = 20;
         boolean loop = true;
@@ -183,7 +184,6 @@ public class CentralUnit {
         for (int i = 0; i < passes; i++) {
             for (Room room : house.getRooms()) {
                 try {
-
                     switch (new Random().nextInt(chance)) {
                         case 1:
                             room.setOnFire();
