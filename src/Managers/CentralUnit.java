@@ -92,12 +92,15 @@ public class CentralUnit {
             Print.line(Print.title("Overview", notification));
             house.printHouse();
 
-            int size = house.getRooms().size() + 2;
+            int size = house.getRooms().size() + 5;
             String[] options = new String[size];
             int idx = 0;
             for (Room room : house.getRooms()) {
                 options[idx++] = room.getName();
             }
+            options[idx++] = "simulate";
+            options[idx++] = "toggle";
+            options[idx++] = "reset";
             options[idx++] = "exit";
             options[idx] = "quit";
 
@@ -105,7 +108,21 @@ public class CentralUnit {
 
             if (option.equals("exit") || option.equals("quit"))
                 break;
-            house.getRoomByName(option).menu();
+            
+            switch (option) {
+                case "simulate":
+                    simulate();
+                    break;
+                case "toggle":
+                    toggleAlarm();
+                    break;
+                case "reset":
+                    reset();
+                    break;
+                default: 
+                    house.getRoomByName(option).menu();
+                    break;
+            }
         }
     }
 
@@ -126,6 +143,7 @@ public class CentralUnit {
     private static void simulate() {
         //TODO
         int passes = 10;
+        int chance = 20;
         boolean loop = true;
         while (loop) {
             Print.clear();
@@ -133,8 +151,9 @@ public class CentralUnit {
                     %s
                         %s
                         [1] [P]asses (%s)
-                        [2] [R]un""", Print.title("Simulation", notification), Print.back(), passes));
-            String option = Validate.option("1p2r");
+                        [2] [C]hance (%s)
+                        [2] [R]un""", Print.title("Simulation", notification), Print.back(), passes, chance));
+            String option = Validate.option("1p2c3r");
             switch (option) {
                 case "1":
                     passes = Validate.number(0);
@@ -143,10 +162,16 @@ public class CentralUnit {
                     passes = Validate.number(0);
                     break;
                 case "2":
-                    runSimulation(passes);
+                    chance = Validate.number(0);
+                    break;
+                case "c":
+                    chance = Validate.number(0);
+                    break;
+                case "3":
+                    runSimulation(passes, chance);
                     break;
                 case "r":
-                    runSimulation(passes);
+                    runSimulation(passes, chance);
                     break;
                 case "q":
                     return;
@@ -154,12 +179,12 @@ public class CentralUnit {
         }
     }
 
-    private static void runSimulation(int passes) {
+    private static void runSimulation(int passes, int chance) {
         for (int i = 0; i < passes; i++) {
             for (Room room : house.getRooms()) {
                 try {
 
-                    switch (new Random().nextInt(10)) {
+                    switch (new Random().nextInt(chance)) {
                         case 1:
                             room.setOnFire();
                             break;
@@ -197,10 +222,12 @@ public class CentralUnit {
 
     private static void listDetectors() {
         Print.clear();
-        notification = "";
+        Print.line(Print.title("Alarms"));
         for (Alarm alarm : toggleAbleAlarms) {
-            notification += "\n" + alarm;
+            Print.line(alarm);
         }
+        Print.line("Press enter to continue...");
+        Print.newScan();
     }
 
     private static void toggleAlarm() {

@@ -96,12 +96,13 @@ public class Room extends Area {
             }
         }
         for (EntryPoint ep : entryPoints) {
-            if (ep.detector.isTriggered()) {
-                status = 3;
-                break;
-            }
-            else if(ep.detector.isSoftTrigger()){
-                status = 2;
+            if(ep.detector.isActive()) {
+                if (ep.detector.isTriggered()) {
+                    status = 3;
+                    break;
+                } else if (ep.detector.isSoftTrigger()) {
+                    status = 2;
+                }
             }
         }
         setLinkedStat(status);

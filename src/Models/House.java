@@ -1,10 +1,7 @@
 package Models;
 
 import JWutil.Print;
-import Managers.CentralUnit;
-import Security.Detector;
-import Security.MotionDetector;
-import Security.SmokeDetector;
+import Security.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -117,8 +114,8 @@ public class House {
                 |         |
                 I  Jared  ]
                 |         |""", level, "jared");
-        jared.setDetectors(new Detector[]{new SmokeDetector(jared)});
-        jared.setEntryPoints(new EntryPoint[]{new StrongDoor(jared), new Door(jared)});
+        jared.setDetectors(new Detector[]{new SmokeDetector(jared), new MotionDetector(jared)});
+        jared.setEntryPoints(new EntryPoint[]{new StrongDoor(jared), new Door(jared), new Window(jared)});
         level++;
 
         Room gilfoyle = new Room("""
@@ -147,16 +144,17 @@ public class House {
 
         Area garage = new Area("""
                 |         |
-                |         |
                 |  Garage |
+                |         |
                  \\_______/""", level++);
         jared.setLinkedArea(garage);
 
-        Room lawn = new Room("""
+        Area lawn = new Area("""
                 |                                                             |         |
                 |                                                             |         |
                 |                           Lawn                              |         |
-                |_____________________________________________________________|_________|""",level, "lawn");
+                |_____________________________________________________________|_________|""",level);
+        backYard.setLinkedArea(lawn);
 
         areas.add(backYard);
         areas.add(dinesh);

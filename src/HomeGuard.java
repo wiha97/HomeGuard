@@ -30,8 +30,8 @@ public class HomeGuard {
                     |                                |""", line("", false));
         String[] rows = logo.split("\n");
         for(String row : rows){
-            App.sleep(50);
             Print.line(row);
+            App.sleep(50);
         }
         line(logo, true);
     }

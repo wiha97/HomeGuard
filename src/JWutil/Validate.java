@@ -20,7 +20,7 @@ public class Validate {
 
     private static int validateNumber(String prompt, int min) {
         while (true) {
-            Print.Same(prompt);
+            Print.same(prompt);
             String input = Print.newScan();
             if (isNumber(input)) {
                 int num = Integer.parseInt(input);
@@ -37,7 +37,7 @@ public class Validate {
         options += RETURN;
         boolean isValid = false;
         do {
-            Print.Same("Select: ");
+            Print.same("Select: ");
             opt = Print.newScan();
             if (!opt.isEmpty())
                 isValid = options.contains(opt);

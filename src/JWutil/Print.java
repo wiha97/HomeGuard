@@ -1,7 +1,5 @@
 package JWutil;
 
-import Managers.CentralUnit;
-
 import java.util.Scanner;
 
 public class Print {
@@ -24,7 +22,7 @@ public class Print {
         System.out.println(i);
     }
 
-    public static void Same(String text) {
+    public static void same(String text) {
         System.out.print(text);
     }
 
@@ -94,6 +92,6 @@ public class Print {
 
     //  Does not work in IDE terminal
     public static void clear() {
-        Print.Same("\033[H\033[2J");
+        Print.same("\033[H\033[2J");
     }
 }
