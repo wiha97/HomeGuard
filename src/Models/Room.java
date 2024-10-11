@@ -32,8 +32,8 @@ public class Room extends Area {
         while (loop) {
             String opts = "sf";
             String str = "";
-            for(int i = 0; i < detectors.length; i++){
-                str += String.format("        %s (%s) %s", detectors[i], detectors[i].isActive() ? Print.good("enabled"):Print.warning("disabled"), detectors[i].isTriggered() ? Print.warning("ALERT"):"");
+            for (Detector detector : detectors) {
+                str += String.format("        %s (%s) %s", detector, detector.isActive() ? Print.good("enabled") : Print.warning("disabled"), detector.isTriggered() ? Print.warning("ALERT") : "");
                 str += "\n";
             }
             for (int i = 1; i <= entryPoints.length; i++) {
