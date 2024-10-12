@@ -14,7 +14,7 @@ public class PinPad {
 
     public boolean enterPin() {
         Print.clear();
-        Print.line(Print.title(" 0451 "));
+        Print.line(Print.title(" "+CODE+" "));
         Print.line("""
                 ||        |        |        ||
                 ||    1   |    2   |    3   ||
@@ -38,7 +38,7 @@ public class PinPad {
                 App.sleep(1000);
                 i--;
             }
-            if(i < 1){
+            if(i < 1 && !pass.get().equals(CODE)){
                 Print.clear();
                 Print.line(Print.warning("Timed out"));
                 Print.line(Print.warning("Press enter to continue"));
