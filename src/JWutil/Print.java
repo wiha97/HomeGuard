@@ -1,5 +1,9 @@
 package JWutil;
 
+import Models.LogModel;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class Print {
@@ -57,6 +61,22 @@ public class Print {
                             %s
                 ============%s============""", filler(length, "="), title, filler(length, "="));
     }
+
+    public static String title(String title, List<LogModel> list) {
+        int length = title.length();
+        return String.format("""
+                ============%s============ %s
+                            %s             %s
+                ============%s============ %s""", filler(length, "="), sizeCheck(list, 0),
+                title, list.size() > 0 ? sizeCheck(list, 1):"    No logs :(", filler(length, "="), sizeCheck(list, 2));
+    }
+
+    private static String sizeCheck(List<LogModel> list, int idx){
+        if(list.size() > idx)
+            return list.get(idx).toString();
+        return "";
+    }
+
     public static String title(String title, String note) {
         int length = title.length();
         return String.format("""

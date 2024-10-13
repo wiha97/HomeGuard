@@ -24,8 +24,12 @@ public class EntryPoint {
                     %s
                         %s
                         [1] %s
-                        [2] %s""", Print.title(name, CentralUnit.getNotification()), Print.back(), !isOpen ? "[O]pen" : "[C]lose", !isBroken ? "[D]estroy" : "[F]ix"));
-            String option = Validate.option("1oc2df");
+                        [2] %s
+                        [3] %s""", Print.title(name, CentralUnit.getNotification()), Print.back(),
+                    !isOpen ? "[O]pen" : "[C]lose",
+                    !isBroken ? "[D]estroy" : "[F]ix",
+                    detector.isActive() ? "De[A]ctivate" : "[A]ctivate"));
+            String option = Validate.option("1oc2df3a");
             switch (option) {
                 case "1":
                     open();
@@ -44,6 +48,12 @@ public class EntryPoint {
                     break;
                 case "f":
                     breach();
+                    break;
+                case "3":
+                    detector.toggle();
+                    break;
+                case "a":
+                    detector.toggle();
                     break;
                 case "q":
                     loop = false;

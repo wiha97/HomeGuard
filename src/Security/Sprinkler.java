@@ -12,9 +12,9 @@ public class Sprinkler {
     }
     public void activate(){
         App.sleep(500);
-        CentralUnit.setNotification(room.getName() + " sprinkler: " + Print.NAVY + "FSSSSSSSSSSSSHHHHHHH" + Print.RESET);
+        CentralUnit.setNotification(room.getName() + " sprinkler: " + Print.NAVY + "FSSSSSSSSSSSSHHHHHHH" + Print.RESET, 1);
         App.sleep(500);
         room.extinguishFire();
-        CentralUnit.setNotification(Print.good(room.getName() + " fire extinguished!"));
+        CentralUnit.setNotification(Print.good(room.getName() + " fire extinguished!"),2);
     }
 }

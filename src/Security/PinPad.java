@@ -1,6 +1,7 @@
 package Security;
 
 import JWutil.*;
+import Managers.CentralUnit;
 
 import java.util.concurrent.atomic.*;
 
@@ -42,6 +43,7 @@ public class PinPad {
                 Print.clear();
                 Print.line(Print.warning("Timed out"));
                 Print.line(Print.warning("Press enter to continue"));
+                CentralUnit.setNotification(Print.alert("Pin failed!"),1);
             }
             loop.set(false);
         });

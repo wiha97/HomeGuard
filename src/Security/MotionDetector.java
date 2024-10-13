@@ -1,6 +1,7 @@
 package Security;
 
 import Interfaces.Alarm;
+import JWutil.Print;
 import Managers.CentralUnit;
 import Models.Room;
 
@@ -14,7 +15,7 @@ public class MotionDetector extends AreaDetector implements Alarm {
     public void trigger() {
         isTriggered = true;
 //        CentralUnit.sirens("Motion detected in " + room.getName());
-        CentralUnit.setNotification("Motion detected in " + room.getName());
+        CentralUnit.setNotification(Print.warning("Motion detected in " + room.getName()), 1);
     }
 
     @Override
@@ -30,5 +31,6 @@ public class MotionDetector extends AreaDetector implements Alarm {
     public void reset() {
         room.setHasMovement(false);
         isTriggered = false;
+        CentralUnit.setNotification(Print.good(this + " reset"), 3);
     }
 }

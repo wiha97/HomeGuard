@@ -1,12 +1,8 @@
 package Managers;
 
 import Interfaces.Alarm;
-import JWutil.App;
-import JWutil.Print;
-import JWutil.Validate;
-import Models.EntryPoint;
-import Models.House;
-import Models.Room;
+import JWutil.*;
+import Models.*;
 import Security.*;
 
 import java.util.ArrayList;
@@ -26,7 +22,7 @@ public class CentralUnit {
         house = new House();
         toggleAbleAlarms = DETECTORS.stream().filter(a -> !(a instanceof SmokeDetector)).toList();
         middleOut();
-        menu();
+        overview();
     }
 
     public static void menu() {
@@ -41,8 +37,8 @@ public class CentralUnit {
                                 [3] [T]oggle system (%s)
                                 [4] [R]eset system
                                 [5] [S]imulate""",
-                    Print.title("HomeGuard " + App.getVersion(), notification), Print.back(), 
-                    DETECTORS.stream().filter(Alarm::isActive).toList().size(), 
+                    Print.title("HomeGuard " + App.getVersion(), Logger.getLogs()), Print.back(),
+                    DETECTORS.stream().filter(Alarm::isActive).toList().size(),
                     isEnabled ? Print.good("Enabled") : Print.warning("Disabled")));
             String option = Validate.option("1o2l3t4r5s");
             switch (option) {
@@ -91,29 +87,40 @@ public class CentralUnit {
         boolean loop = true;
         while (loop) {
             Print.clear();
-            Print.line(Print.title("Overview", notification));
+            if(Conf.isCompactMode())
+                Print.line(Print.title("HomeGuard " + App.getVersion(), Logger.getLogs()));
+            else
+                Print.line(Print.title("HomeGuard " + App.getVersion()));
             house.printHouse();
 
-            int size = house.getRooms().size() + 5;
+            int size = house.getRooms().size() + 8;
             String[] options = new String[size];
             int idx = 0;
             for (Room room : house.getRooms()) {
                 options[idx++] = room.getName();
             }
+            options[idx++] = "log settings";
             options[idx++] = "simulate";
             options[idx++] = "toggle";
             options[idx++] = "reset";
             options[idx++] = "exit";
+            options[idx++] = "simple";
+            options[idx++] = "compact mode";
             options[idx] = "quit";
 
             String option = Validate.optString(options);
 
-            if (option.equals("exit") || option.equals("quit"))
+            if (option.equals("exit") || option.equals("quit")) {
+                runLoop = false;
                 break;
-            
+            }
+
             switch (option) {
                 case "simulate":
                     simulate();
+                    break;
+                case "log settings":
+                    Logger.menu();
                     break;
                 case "toggle":
                     toggleAlarm();
@@ -121,7 +128,13 @@ public class CentralUnit {
                 case "reset":
                     reset();
                     break;
-                default: 
+                case "simple":
+                    menu();
+                    break;
+                case "compact mode":
+                    Conf.setCompactMode();
+                    break;
+                default:
                     house.getRoomByName(option).menu();
                     break;
             }
@@ -145,6 +158,7 @@ public class CentralUnit {
     private static void simulate() {
         int passes = 10;
         int chance = 20;
+        int delay = 100;
         boolean loop = true;
         while (loop) {
             Print.clear();
@@ -153,8 +167,9 @@ public class CentralUnit {
                         %s
                         [1] [P]asses (%s)
                         [2] [C]hance (%s)
-                        [2] [R]un""", Print.title("Simulation", notification), Print.back(), passes, chance));
-            String option = Validate.option("1p2c3r");
+                        [3] [D]elay (%s)
+                        [4] [R]un""", Print.title("Simulation"), Print.back(), passes, chance, delay));
+            String option = Validate.option("1p2c3d4r");
             switch (option) {
                 case "1":
                     passes = Validate.number(0);
@@ -169,10 +184,16 @@ public class CentralUnit {
                     chance = Validate.number(0);
                     break;
                 case "3":
-                    runSimulation(passes, chance);
+                    delay = Validate.number(0);
+                    break;
+                case "d":
+                    delay = Validate.number(0);
+                    break;
+                case "4":
+                    runSimulation(passes, chance, delay);
                     break;
                 case "r":
-                    runSimulation(passes, chance);
+                    runSimulation(passes, chance, delay);
                     break;
                 case "q":
                     return;
@@ -180,44 +201,44 @@ public class CentralUnit {
         }
     }
 
-    private static void runSimulation(int passes, int chance) {
+    private static void runSimulation(int passes, int chance, int delay) {
         for (int i = 0; i < passes; i++) {
             for (Room room : house.getRooms()) {
-                try {
-                    switch (new Random().nextInt(chance)) {
-                        case 1:
-                            room.setOnFire();
-                            break;
-                        case 2:
-                            room.setHasMovement(!room.isHasMovement());
-                            break;
-                        case 3:
-                            if (room.getEntryPoints().length > 0) {
-                                EntryPoint ep = room.getEntryPoints()[new Random().nextInt(room.getEntryPoints().length)];
-                                ep.open();
-                            }
-                            break;
-                        case 4:
-                            if (room.getEntryPoints().length > 0) {
-                                EntryPoint ep = room.getEntryPoints()[new Random().nextInt(room.getEntryPoints().length)];
-                                ep.breach();
-                            }
-                            break;
-                        default:
-                            break;
-                    }
-                    Print.clear();
-                    Print.line(Print.title("Simulation", notification));
-                    house.printHouse();
-                    App.sleep(100);
-
-                } catch (Exception e) {
-                    notification = room.getName() + " " + e.getMessage();
-                    break;
+                switch (new Random().nextInt(chance)) {
+                    case 1:
+                        room.setOnFire();
+                        break;
+                    case 2:
+                        room.setHasMovement(!room.isHasMovement());
+                        break;
+                    case 3:
+                        if (room.getEntryPoints().length > 0) {
+                            EntryPoint ep = room.getEntryPoints()[new Random().nextInt(room.getEntryPoints().length)];
+                            ep.open();
+                        }
+                        break;
+                    case 4:
+                        if (room.getEntryPoints().length > 0) {
+                            EntryPoint ep = room.getEntryPoints()[new Random().nextInt(room.getEntryPoints().length)];
+                            ep.breach();
+                        }
+                        break;
+                    default:
+                        break;
                 }
+                Print.clear();
+                if(Conf.isCompactMode())
+                    Print.line(Print.title("Simulation", Logger.getLogs()));
+                else
+                    Print.line(Print.title("Simulation"));
+                house.printHouse();
+                Print.line(Print.info(String.format("Pass: %s/%s", i+1, passes)));
+                App.sleep(delay);
             }
         }
-//        notification = "Simulation complete";
+        Print.line("Press enter to continue...");
+        setNotification("Simulation complete", 1);
+        Print.newScan();
     }
 
     private static void listDetectors() {
@@ -237,8 +258,8 @@ public class CentralUnit {
             for (Alarm alarm : toggleAbleAlarms) {
                 ((Detector) alarm).setActive(isEnabled);
             }
+            setNotification(Print.info("Alarms toggled"), 2);
         }
-        notification = Print.GRAY + "toggled alarms" + Print.RESET;
     }
 
     private static void reset() {
@@ -248,7 +269,7 @@ public class CentralUnit {
                 alarm.reset();
             }
         }
-        notification = "Reset alarm system";
+        setNotification("Reset alarm system", 2);
     }
 
     public static void sirens(String message) {
@@ -268,7 +289,8 @@ public class CentralUnit {
         runLoop = run;
     }
 
-    public static void setNotification(String notification) {
+    public static void setNotification(String notification, int logLevel) {
         CentralUnit.notification = notification;
+        Logger.addLog(notification, logLevel);
     }
 }

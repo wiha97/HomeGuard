@@ -1,6 +1,7 @@
 package Models;
 
 import JWutil.Print;
+import Managers.Logger;
 import Security.*;
 
 import java.util.ArrayList;
@@ -38,6 +39,16 @@ public class House {
                 }
             }
             i++;
+            if(!Conf.isCompactMode()) {
+                if (x == 0)
+                    Print.same("    _____________________________________________");
+                if (Logger.getLogs().size() < 1 && x == 12)
+                    Print.same("                       No logs :(");
+                else if (x != 0 && Logger.getLogs().size() > x - 1 && x < 23)
+                    Print.same("     " + Logger.getLogs().get(x - 1));
+                if (x == 23)
+                    Print.same("    _____________________________________________");
+            }
             Print.line("");
         }
     }
@@ -146,7 +157,7 @@ public class House {
                 |         |
                 |  Garage |
                 |         |
-                 \\_______/""", level++);
+                |\\_______/|""", level++);
         jared.setLinkedArea(garage);
 
         Area lawn = new Area("""

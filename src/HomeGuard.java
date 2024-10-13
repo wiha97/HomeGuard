@@ -26,7 +26,7 @@ public class HomeGuard {
                     |   |___|    |___|   \\___|  |   |
                     |               \\           |   |
                     |        GUARD   \\__________/   |
-                    |                               |""", line("", false));
+                    |                         %s|""", line("", false), Print.info(App.getVersion()));
         String[] rows = logo.split("\n");
         for(String row : rows){
             Print.line(row);
@@ -38,17 +38,17 @@ public class HomeGuard {
     static String line(String ln, boolean rev){
         String bar = "";
         if(!rev) {
-            for (int i = 0; i < 32; i++) {
+            for (int i = 0; i < 31; i++) {
                 Print.clear();
-                bar = loading(i, 32, '=', ' ');
+                bar = loading(i, 31, '=', ' ');
                 Print.line(bar);
                 App.sleep(10);
             }
         }
         else {
-            for (int i = 30; i > 0; i--) {
+            for (int i = 29; i > 0; i--) {
                 Print.clear();
-                bar = loading(i, 30, ' ', '=');
+                bar = loading(i, 29, ' ', '=');
                 Print.line(ln);
                 Print.line(" "+bar+" ");
                 App.sleep(33);

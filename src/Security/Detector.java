@@ -1,6 +1,5 @@
 package Security;
 
-import Interfaces.Alarm;
 import JWutil.Print;
 
 public abstract class Detector {
@@ -14,6 +13,10 @@ public abstract class Detector {
 
     public void setActive(boolean active){
         isActive = active;
+    }
+
+    public void toggle(){
+        isActive = !isActive;
     }
 
     @Override

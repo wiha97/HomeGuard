@@ -1,6 +1,7 @@
 package Security;
 
 import Interfaces.Alarm;
+import JWutil.Print;
 import Managers.CentralUnit;
 import Models.EntryPoint;
 
@@ -14,13 +15,13 @@ public class EntryDetector extends Detector implements Alarm {
 
     public void softTrigger(){
         softTrigger = true;
-        CentralUnit.setNotification(entryPoint + " was opened");
+        CentralUnit.setNotification(Print.warning(entryPoint + " was opened"),2);
     }
 
     @Override
     public void trigger() {
         isTriggered = true;
-        CentralUnit.setNotification(entryPoint + " was broken");
+        CentralUnit.setNotification(Print.alert(entryPoint + " was broken"),1);
     }
 
     @Override
@@ -39,6 +40,7 @@ public class EntryDetector extends Detector implements Alarm {
     public void reset() {
         softTrigger = false;
         isTriggered = false;
+        CentralUnit.setNotification(Print.good(this + " reset"), 3);
     }
 
     public boolean isSoftTrigger(){
