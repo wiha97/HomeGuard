@@ -1,8 +1,4 @@
-package Managers;
-
-import JWutil.Print;
-import JWutil.Validate;
-import Models.LogModel;
+package JWutil;
 
 import java.util.ArrayList;
 import java.util.List;

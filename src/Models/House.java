@@ -1,7 +1,7 @@
 package Models;
 
 import JWutil.Print;
-import Managers.Logger;
+import JWutil.Logger;
 import Security.*;
 
 import java.util.ArrayList;
